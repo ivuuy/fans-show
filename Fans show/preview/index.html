@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <title>Fans show Preview</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 12% 0%, rgba(124,58,237,.16), transparent 30%),
+        radial-gradient(circle at 90% 8%, rgba(34,211,238,.18), transparent 24%),
+        #f4f5f7;
+      color: #0b0b11;
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    }
+    .phone {
+      max-width: 430px;
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 34px 14px 96px;
+    }
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .eyebrow {
+      display: block;
+      color: #7c3aed;
+      font-size: 13px;
+      font-weight: 900;
+    }
+    .headline {
+      display: block;
+      margin-top: 4px;
+      font-size: 31px;
+      line-height: 1.04;
+      font-weight: 900;
+    }
+    .notify {
+      width: 42px;
+      height: 42px;
+      border-radius: 16px;
+      background: #0b0b11;
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 12px;
+      font-weight: 900;
+      box-shadow: 0 8px 18px rgba(11,11,17,.18);
+    }
+    .studio {
+      position: relative;
+      min-height: 250px;
+      border-radius: 28px;
+      padding: 22px;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.08) 0 1px, transparent 1px 22px),
+        linear-gradient(135deg, #0b0b11 0%, #24204d 52%, #00d4ff 160%);
+      box-shadow: 0 18px 38px rgba(11,11,17,.22);
+    }
+    .studio-copy {
+      position: relative;
+      z-index: 2;
+      max-width: 235px;
+    }
+    .studio-label {
+      display: inline-flex;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.12);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 900;
+      border: 1px solid rgba(255,255,255,.16);
+    }
+    .studio-title {
+      display: block;
+      margin-top: 17px;
+      color: #fff;
+      font-size: 28px;
+      line-height: 1.15;
+      font-weight: 900;
+    }
+    .studio-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 18px;
+    }
+    .studio-actions span {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #fff;
+      color: #0b0b11;
+      font-size: 13px;
+      font-weight: 900;
+    }
+    .studio-actions span:last-child {
+      background: rgba(255,255,255,.12);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.16);
+    }
+    .photo-board {
+      position: absolute;
+      right: 15px;
+      top: 42px;
+      width: 145px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      transform: rotate(7deg);
+      z-index: 2;
+    }
+    .photo {
+      height: 76px;
+      border-radius: 16px;
+      padding: 9px;
+      display: flex;
+      align-items: flex-end;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 900;
+      background: rgba(255,255,255,.13);
+      border: 1px solid rgba(255,255,255,.18);
+      backdrop-filter: blur(10px);
+    }
+    .photo:nth-child(2) { background: #7c3aed; }
+    .photo:nth-child(3) { background: #06b6d4; }
+    .photo:nth-child(4) { background: rgba(255,255,255,.24); }
+    .ring {
+      position: absolute;
+      right: -54px;
+      bottom: -64px;
+      width: 210px;
+      height: 210px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.25);
+      box-shadow: inset 0 0 36px rgba(255,255,255,.12);
+    }
+    .quick {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+      margin: 12px 0;
+    }
+    .quick-card, .panel {
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 8px 22px rgba(17,24,39,.05);
+    }
+    .quick-card {
+      min-height: 70px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 4px;
+    }
+    .quick-card strong {
+      font-size: 21px;
+      line-height: 1;
+    }
+    .quick-card span {
+      color: #6b7280;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .panel {
+      padding: 18px;
+      margin-bottom: 12px;
+    }
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    .panel-title {
+      display: block;
+      font-size: 20px;
+      font-weight: 900;
+    }
+    .panel-sub {
+      display: block;
+      margin-top: 5px;
+      color: #6b7280;
+      font-size: 12px;
+    }
+    .more {
+      color: #7c3aed;
+      font-size: 13px;
+      font-weight: 900;
+    }
+    .timeline {
+      display: grid;
+      grid-template-columns: 16px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 0;
+      border-top: 1px solid #eef0f3;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #7c3aed;
+      box-shadow: 0 0 0 5px #f3e8ff;
+    }
+    .timeline strong {
+      display: block;
+      font-size: 16px;
+    }
+    .timeline span {
+      display: block;
+      margin-top: 3px;
+      color: #6b7280;
+      font-size: 12px;
+      line-height: 1.3;
+    }
+    .price {
+      max-width: 86px;
+      padding: 6px 8px;
+      border-radius: 999px;
+      background: #f1f2f5;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .mosaic {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 10px;
+    }
+    .follow-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .mini-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 11px;
+      font-weight: 900;
+      flex: 0 0 auto;
+    }
+    .follow-name {
+      display: block;
+      font-size: 13px;
+      font-weight: 900;
+    }
+    .follow-info {
+      display: block;
+      margin-top: 2px;
+      color: #6b7280;
+      font-size: 10px;
+      line-height: 1.2;
+    }
+    .market {
+      background: #111827;
+      color: #fff;
+    }
+    .market .panel-title { color: #fff; }
+    .market-card {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.1);
+    }
+    .market-card strong {
+      display: block;
+      font-size: 12px;
+    }
+    .market-card span {
+      display: block;
+      margin-top: 4px;
+      color: #a7f3d0;
+      font-size: 18px;
+      font-weight: 900;
+    }
+    .market-note {
+      display: block;
+      margin-top: 12px;
+      color: rgba(255,255,255,.64);
+      font-size: 12px;
+    }
+    .switch {
+      display: flex;
+      gap: 4px;
+      padding: 4px;
+      border-radius: 999px;
+      background: #f1f2f5;
+    }
+    .switch span {
+      padding: 6px 10px;
+      border-radius: 999px;
+      color: #6b7280;
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .switch .active {
+      background: #111827;
+      color: #fff;
+    }
+    .artist-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .artist {
+      padding: 8px 11px;
+      border-radius: 999px;
+      background: #f7f8fa;
+      font-size: 13px;
+      font-weight: 900;
+    }
+    .bottom {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #fff;
+      border-top: 1px solid rgba(238,240,243,.8);
+    }
+    .bottom-inner {
+      max-width: 430px;
+      height: 76px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      align-items: center;
+    }
+    .tab {
+      text-align: center;
+      color: #333;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .tab-icon {
+      width: 30px;
+      height: 30px;
+      margin: 0 auto 5px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+      font-weight: 900;
+    }
+    .tab.active .tab-icon {
+      background: #333;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <main class="phone">
+    <header class="top">
+      <div>
+        <span class="eyebrow">Fans show</span>
+        <span class="headline">今天和谁同框？</span>
+      </div>
+      <div class="notify">99+</div>
+    </header>
+
+    <section class="studio">
+      <div class="studio-copy">
+        <span class="studio-label">FOUR CUT STUDIO</span>
+        <span class="studio-title">把今天拍成和爱豆一起出现的四宫格</span>
+        <div class="studio-actions"><span>开始合拍</span><span>选择模板</span></div>
+      </div>
+      <div class="photo-board">
+        <div class="photo">YOU</div>
+        <div class="photo">IDOL</div>
+        <div class="photo">LIVE</div>
+        <div class="photo">2026</div>
+      </div>
+      <div class="ring"></div>
+    </section>
+
+    <section class="quick">
+      <div class="quick-card"><strong>8</strong><span>行程更新</span></div>
+      <div class="quick-card"><strong>4</strong><span>二手周边</span></div>
+      <div class="quick-card"><strong>24</strong><span>粉丝动态</span></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div><span class="panel-title">今日行程雷达</span><span class="panel-sub">只看团、场馆和票价，不做售票</span></div>
+        <span class="more">全部</span>
+      </div>
+      <div class="timeline"><div class="dot"></div><div><strong>NCT127</strong><span>TAEYONG 'WYLD' Countdown Live<br>05.18 周一 · 线上</span></div><div class="price">免费</div></div>
+      <div class="timeline"><div class="dot"></div><div><strong>aespa</strong><span>aespa 2026 Tour Schedule<br>06.18 周四 · 上海</span></div><div class="price">480-1580</div></div>
+      <div class="timeline"><div class="dot"></div><div><strong>RIIZE</strong><span>RIIZE First Frame Live<br>06.25 周四 · 北京</span></div><div class="price">580-1680</div></div>
+      <div class="timeline"><div class="dot"></div><div><strong>IVE</strong><span>IVE Fan Concert Schedule<br>07.03 周五 · 广州</span></div><div class="price">399-1299</div></div>
+    </section>
+
+    <section class="mosaic">
+      <div class="panel">
+        <span class="panel-title">我关注</span>
+        <div class="follow-line"><div class="mini-logo" style="background:#050505">A</div><div><span class="follow-name">ANDBLE</span><span class="follow-info">07.20 Party · KRW 99,000</span></div></div>
+        <div class="follow-line"><div class="mini-logo" style="background:#fff;color:#050505;border:1px solid #eef0f3">BM</div><div><span class="follow-name">BABYMONSTER</span><span class="follow-info">08.02 杭州签售</span></div></div>
+        <div class="follow-line"><div class="mini-logo" style="background:#316ab2">TWS:</div><div><span class="follow-name">TWS</span><span class="follow-info">南京 Showcase</span></div></div>
+      </div>
+      <div class="panel market">
+        <span class="panel-title">二手周边</span>
+        <div class="market-card"><strong>aespa</strong><span>¥88</span></div>
+        <div class="market-card"><strong>BABYMONSTER</strong><span>¥35</span></div>
+        <span class="market-note">粉丝信息流</span>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div><span class="panel-title">选择团体</span><span class="panel-sub">每个名字都有独立格子</span></div>
+        <div class="switch"><span class="active">女团</span><span>男团</span></div>
+      </div>
+      <div class="artist-cloud">
+        <span class="artist">ITZY</span><span class="artist">(G)I-DLE</span><span class="artist">aespa</span>
+        <span class="artist">STAYC</span><span class="artist">Kep1er</span><span class="artist">BABYMONSTER</span>
+        <span class="artist">BLACKPINK</span><span class="artist">NewJeans</span><span class="artist">IVE</span>
+        <span class="artist">LE SSERAFIM</span><span class="artist">NMIXX</span><span class="artist">XG</span>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom">
+    <div class="bottom-inner">
+      <div class="tab active"><div class="tab-icon">w</div>主页</div>
+      <div class="tab"><div class="tab-icon">▢</div>行程</div>
+      <div class="tab"><div class="tab-icon">⌁</div>DM</div>
+      <div class="tab"><div class="tab-icon">•••</div>More</div>
+    </div>
+  </nav>
+</body>
+</html>
